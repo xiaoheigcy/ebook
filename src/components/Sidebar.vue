@@ -28,6 +28,10 @@
 		opacity: 0.3;
 		z-index: 5;
 		display: none;
+		position: fixed;
+		top: 0;
+		left: 0;
+		transition: all 0.3 linear;
 	}
 	.sidebar-head{
 		height: 60px;
@@ -110,7 +114,10 @@ export default {
   	showHide(num) {
   		if (num === 1) {
   			document.getElementById("sidebarMove").style.left = -80 + 'vw'
-  			document.getElementById("container").style.display = "none"
+  			setTimeout(function(){
+				document.getElementById("container").style.display = "none"
+  			},300)
+  			
   		} else {
   			document.getElementById("sidebarMove").style.left = 0
   			document.getElementById("container").style.display = "block"
