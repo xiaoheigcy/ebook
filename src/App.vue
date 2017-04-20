@@ -2,16 +2,19 @@
   <div id="app">
     <!-- <img src="./assets/logo.png"> -->
     <!-- <router-view></router-view> -->
-    <intro></intro>
+    <!-- <intro></intro> -->
+    <sidebar></sidebar>
   </div>
 </template>
 
 <script>
 import Intro from './components/Intro'
+import Sidebar from './components/Sidebar'
 export default {
   name: 'app',
   components: {
-    Intro
+    Intro,
+    Sidebar
   }
 }
 </script>

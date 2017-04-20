@@ -27,6 +27,7 @@
 		background: #000;
 		opacity: 0.3;
 		z-index: 5;
+		display: none;
 	}
 	.sidebar-head{
 		height: 60px;
