@@ -94,7 +94,7 @@
 	<div class="intro">
 		<img class="bookcover" src="../assets/bookcover.png">
 		<p class="name">《人生管理学》</p>
-		<p class="author">鱼头</p>
+		<p class="author">显峰</p>
 		<div class="bac">
 			<div class="info-body">
 				<p class="body-name">
