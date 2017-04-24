@@ -2,13 +2,21 @@
 	.btns{
 		position: fixed;
 		z-index: 1;
-		left: 20px;
-		bottom: 40px;
-		width: 52px;
-	}
-	.btns img{
+		left: 0px;
+		bottom: 0px;
 		width: 100%;
-		height: 100%;
+		height: 44px;
+		transition: all 0.5s ease-in-out;
+		p{
+			height: 100%;
+			line-height: 44px;
+			font-size: 14px;
+			text-align: center;
+			width: 50%;
+			float: left;
+			background: #f60;
+			color: #fff;
+		}
 	}
 	.sidebar-body{
 		width: 80vw;
@@ -77,9 +85,13 @@
 </style>
 <template>
 	<div id="sidebar">
-		<div class="btns">
-			<img src="../assets/share.png">
-			<img src="../assets/more.png" @click="showHide(0)">
+		<div id="btns" class="btns">
+			<p>
+				分享
+			</p>
+			<p @click="showHide(0)">
+				目录
+			</p>
 		</div>
 		<div class="sidebar-body" id="sidebarMove">
 			<div class="sidebar-head" @click="goto('intro')">
@@ -167,6 +179,19 @@
 				var $title = sectionName + "  " + chaperName
 				document.title = $title
 				location.htef = `/#/?${chaperName}`
+			}
+		},
+		mounted() {
+			var scrollY0 = 0
+			window.onscroll = function(){
+				var $scrollY = window.scrollY
+				if($scrollY < scrollY0){
+					document.getElementById("btns").style.bottom = 0 + "px"
+				}
+				else if($scrollY > scrollY0){
+					document.getElementById("btns").style.bottom = -44 + "px"
+				}
+				scrollY0 = $scrollY
 			}
 		}
 	}
