@@ -1,24 +1,3 @@
-<template>
-  <div id="app">
-    <!-- <img src="./assets/logo.png"> -->
-    <!-- <router-view></router-view> -->
-    <intro></intro>
-    <sidebar></sidebar>
-  </div>
-</template>
-
-<script>
-import Intro from './components/Intro'
-import Sidebar from './components/Sidebar'
-export default {
-  name: 'app',
-  components: {
-    Intro,
-    Sidebar
-  }
-}
-</script>
-
 <style>
   *{
     margin: 0;
@@ -28,3 +7,27 @@ export default {
     box-sizing: border-box;
   }
 </style>
+
+<template>
+  <div id="app">
+    <!-- <router-view></router-view> -->
+    <!-- <intro></intro> -->
+    <!-- <contentnew></contentnew> -->
+    <!-- <sidebar></sidebar> -->
+    <router-view></router-view>
+  </div>
+</template>
+
+<script>
+import Intro from './components/Intro'
+import Sidebar from './components/Sidebar'
+import Contentnew from './components/Contentnew'
+export default {
+  name: 'app',
+  components: {
+    Intro,
+    Sidebar,
+    Contentnew
+  }
+}
+</script>
