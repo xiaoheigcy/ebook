@@ -1,9 +1,9 @@
 <style lang="less">
 	.btns{
 		position: fixed;
-		z-index: 1;
+		z-index: 3;
 		left: 0px;
-		bottom: 0px;
+		bottom: -44px;
 		width: 100%;
 		height: 44px;
 		transition: all 0.5s ease-in-out;
@@ -16,7 +16,10 @@
 			float: left;
 			background: #f60;
 			color: #fff;
-		}
+			&:nth-child(1){
+				border-right: 1px solid #fff;
+			}
+		}	
 	}
 	.sidebar-body{
 		width: 80vw;
@@ -82,16 +85,41 @@
 		padding-left: 20px;
 		border-bottom: 1px solid #ccc;
 	}
+	.btn-showmore{
+		position: fixed;
+		z-index: 10000;
+		height: 44px;
+		width: 100%;
+		background: blue;
+		color: #fff;
+		font-size: 14px;
+		line-height: 44px;
+		text-align: center;
+		left: 0;
+		bottom: -44px;
+		transition: all 0.5s ease-in-out;
+	}
+	#contain{
+		position: fixed;
+		left: 0;
+		top: 0;
+		height: 100vh;
+		width: 100vw;
+		z-index: 1;
+	}
 </style>
 <template>
 	<div id="sidebar">
 		<div id="btns" class="btns">
-			<p>
-				分享
-			</p>
 			<p @click="showHide(0)">
 				目录
 			</p>
+			<p>
+				分享
+			</p>
+		</div>
+		<div id="btn-more" class="btn-showmore">
+			即将加载下一页
 		</div>
 		<div class="sidebar-body" id="sidebarMove">
 			<div class="sidebar-head" @click="goto('intro')">
@@ -113,6 +141,12 @@
 		<div class="container" @click="showHide(1)" id="container">
 			
 		</div>
+		<div style="height: 44px;">
+			
+		</div>
+		<div id="contain" @click="upDown()">
+			
+		</div>
 	</div>
 	
 </template>
@@ -123,6 +157,8 @@
 		name: 'sidebar',
 		data () {
 			return {
+				stutes : 0,
+				windowScoll : window.onscroll,
 				name: "",
 				sections: [
 				{
@@ -179,20 +215,19 @@
 				var $title = sectionName + "  " + chaperName
 				document.title = $title
 				location.htef = `/#/?${chaperName}`
+			},
+			upDown(){
+				if(this.stutes%2 == 0){
+					document.getElementById("btns").style.bottom = 0 + "px"
+				}
+				else if(this.stutes%2 == 1){
+					document.getElementById("btns").style.bottom = -44 + "px"
+				}
+				this.stutes++
 			}
 		},
 		mounted() {
-			var scrollY0 = 0
-			window.onscroll = function(){
-				var $scrollY = window.scrollY
-				if($scrollY < scrollY0){
-					document.getElementById("btns").style.bottom = 0 + "px"
-				}
-				else if($scrollY > scrollY0){
-					document.getElementById("btns").style.bottom = -44 + "px"
-				}
-				scrollY0 = $scrollY
-			}
+			// window.onscroll = this.showBtnMore()
 		}
 	}
 </script>

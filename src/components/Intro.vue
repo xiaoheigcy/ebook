@@ -149,6 +149,7 @@
 		name: 'intro',
 		data () {
 			return {
+				baseUrl: 'http://114.215.47.40:8080/ebook/api/',
 				name: "",
 				
 				sections: [
@@ -181,19 +182,17 @@
 			}
 		},
 		methods: {
-			// axiosHead() {
-			// 	axios.defaults.headers.common['Authorization'] = JSON.parse(localStorage.getItem("user")).tokenType + ' ' + JSON.parse(localStorage.getItem("user")).token
-			// },
-			// getCont() {
-			// 	axios.get("http://wx.jufenqi.com:8080//content/api/headlines/1").then((res) => {
-
-			// 	}).catch((err) => {
-			// 		console.log(err)
-			// 	})
-			// }
+			getCont() {
+				axios.get(`${this.baseUrl}book-infos`).then((res) => {
+					console.log(res.data.data)
+				}).catch((err) => {
+					console.log(err)
+				})
+			}
 		},
 		mounted() {
-			// this.getCont()
+			window.removeEventListener('scroll',this.handleScroll)
+			this.getCont()
 		}
 	}
 </script>
