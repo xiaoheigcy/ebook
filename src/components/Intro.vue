@@ -191,7 +191,6 @@
 			}
 		},
 		mounted() {
-			window.removeEventListener('scroll',this.handleScroll)
 			this.getCont()
 		}
 	}

@@ -104,6 +104,7 @@
 			    var bScrollH = document.body.scrollHeight; // 滚动条总高度 
 			    if($scrollY + wInnerH >= bScrollH){
 			    	document.getElementById("btn-more").style.bottom = 0 + "px"
+			    	window.removeEventListener('scroll',this.showBtnMore)
 			    	setTimeout(function(){
 						location.href = `/#/intro`
 			    	},2000)
