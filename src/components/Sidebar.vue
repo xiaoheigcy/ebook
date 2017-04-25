@@ -123,9 +123,9 @@
 		</div>
 		<div class="sidebar-body" id="sidebarMove">
 			<div class="sidebar-head" @click="goto('intro')">
-				<img class="head-img" src="../assets/logo.png">
+				<img class="head-img" :src="coverImg">
 				<p>
-					书名
+					{{bookName}}
 				</p>
 				<img class="next" src="../assets/next.png">
 			</div>
@@ -133,8 +133,8 @@
 				<div class="list">
 					{{section.name}}
 				</div>
-				<div id="chaper" class="list-small" v-for="chaper in section.chapers" @click="newChaper(section.name,chaper.name)">
-					{{chaper.name}}
+				<div id="chaper" class="list-small" v-for="chapter in section.chapters" @click="newChapter(section.name,chapter.name,section.sectionId,chapter.chapterId)">
+					{{chapter.name}}
 				</div>
 			</div>
 		</div>
@@ -153,44 +153,18 @@
 
 
 <script>
+	import axios from 'axios'
 	export default {
 		name: 'sidebar',
 		data () {
 			return {
+				bookId: 8,
+				baseUrl: 'http://114.215.47.40:8080/ebook/api/',
 				stutes : 0,
 				windowScoll : window.onscroll,
-				name: "",
-				sections: [
-				{
-					name: "封面"
-				},
-				{
-					name: "版权"
-				},
-				{
-					name: "第一部分",
-					chapers: [
-					{
-						name: "章节一",
-						content: "<p>在装修过程中，大多数朋友都会想的一个问题是，怎么用最少的钱装出最好的效果。但好品味一般是靠钱砸出来的，小编也找不到好的方法，所以小编只能教你们如何合理控制预算，省一些没必要花的钱。</p > \n<p><strong>法则一</strong></p > \n<p><strong>严格控制大面积的主材</strong></p > \n<p>< img src=\"http://s1.life.itc.cn/img/201702/f51f63a9a769f8f4c263a583e2dc6a38\" style=\"max-width:720px;\"/></p > \n<p>住在1楼，由于地面潮湿，会考虑全部铺瓷砖，而不是用地板。但大块的瓷砖不仅贴起来麻烦，而且人工费也贵。所以可以选择小一点的瓷砖，800X800和600X600，这两款泥工贴砖费相对较低。而且有特色的装饰局部点缀可以，大规模使用绝对是降低性价比、增加造价的大坑。想省钱，那么选择主材的方向可以考虑平庸、大品牌、特价。平庸指的是产品型号，可能已经过气了，但是没特色也不难看，这种型号基本是烂大街的款，竞争力低下，购入成本可以压的很低。大品牌，有质量和安全性的要求，用的放心，售后有保障。</p > \n<p><strong>法则二</strong></p > \n<p><strong>隐形的材料值得花费</strong></p > \n<p>< img src=\"http://s1.life.itc.cn/img/201702/34877c40f0b7724aa315dedd7ab5ad9f\" style=\"max-width:720px;\"/></p > \n<p>花钱要花在看不到的东西上，可能很多朋友无法理解这点。比如选择马桶，核心不在于看它的款式和釉面，而是看它的抽水配件，好的抽水配件不仅静音效果很好，而且使用寿命也长。况且马桶出故障八成是在抽水件上出问题，所以选择好的很重要。浴室柜不要选择太廉价的，生锈、台盆掉落、下水器堵塞、管道漏水等都是廉价浴室柜的后果。所以请不要在浴室柜上省钱，现在出的血，不出5年你的浴室柜一定会反馈你。而且优质的台面和柜体材料会给卫生间颜值加分，这个加分比瓷砖更容易些。五金，必须强调再强调，这个地方不要省钱，也不能省钱啊，五金配件清单可能会把很多人吓到，密密麻麻的列表，但花洒、龙头一定要质量过关，你可以不选进口的，但是国产一线牌子还是需要的，因为换一个水龙头的成本代价远高过其本身，所以能一次到位还是尽可能一次到位。</p > \n<p><strong>法则三</strong></p > \n<p><strong>软装的舍取</strong></p > \n<p>< img src=\"http://s1.life.itc.cn/img/201702/e1b4c1d087f769a5528d67658029f529\" style=\"max-width:720px;\"/></p > \n<p>软装暂且用固定和活动来进行分类，灯具和窗帘把它们划进固定类别，装饰品诸如地毯、挂画、瓶瓶罐罐碟碟等全部算活动。固定的软装在兼顾颜值的情况下，也要考虑质量，毕竟想换不是那么容易。比如买吊扇灯就要选择只做吊扇灯的品牌商家。灯具是全屋最出彩的软装，这块要坚定喜好，绝对不因为价格妥协款式。到时候因为一时贪便宜想换，不仅麻烦还费钱。</p > \n<p><strong>法则四</strong></p > \n<p><strong>家具的选择</strong></p > \n<p>< img src=\"http://s1.life.itc.cn/img/201702/ea88578c3d2df3e40e703ef948b2a402\" style=\"max-width:720px;\"/></p > \n<p>固定家具，不论是木工还是外面厂商定制，其实不论标榜什么环保级别，最终就是密度板、夹板、实木。有人可能会问大芯板和免漆板了，解释下大芯板也是夹板的一种，不过是两片夹胶中间木，夹板也分层级，从3层到11层都有，从环保上讲2片夹胶板(大芯板)的胶水用量少，相对会环保些，当然是在用同样甲醛指标的胶水下。免漆板纯属偷换概念的喊法，它仅仅只说明漆面，不能说明它自身里面是什么材质。密度板又称纤维板，是木质和植物纤维用胶水粘制而成的，容易造型，多用于门板，它的胶水含量是最高的，在使用同样级别胶水情况下密度板肯定不如夹板环保。也就是，当用着所谓大牌的密度板家具时，别去嘲笑宜家的纤维板，五十步笑百步，没准人家宜家的还更环保，国家对进口品牌产品检测还是比较严格的。</p > \n<p><strong>法则五</strong></p > \n<p><strong>电器</strong></p > \n<p>< img src=\"http://s1.life.itc.cn/img/201702/6b76be5fc5e17d2e58c02d9e941e8d5e\" style=\"max-width:720px;\"/></p > \n<p>主要讲厨房电器，一定由家里那个下厨房的来定，用不用的上，他（她）来决定，不为只是高大上自己却不擅长用的东西买单，比如没人做西餐甜点，花大价钱买个嵌入烤箱干什么？摆设吗？再比如洗碗机，家里谁洗碗谁来决定要不要买。</p > \n<p><strong>资源来源于网络分享只供学习交流</strong></p >"
-					},
-					{
-						name: "章节二",
-						content: "<p>在装修过程中，大多数朋友都会想的一个问题是，怎么用最少的钱装出最好的效果。但好品味一般是靠钱砸出来的，小编也找不到好的方法，所以小编只能教你们如何合理控制预算，省一些没必要花的钱。</p > \n<p><strong>法则一</strong></p > \n<p><strong>严格控制大面积的主材</strong></p > \n<p>< img src=\"http://s1.life.itc.cn/img/201702/f51f63a9a769f8f4c263a583e2dc6a38\" style=\"max-width:720px;\"/></p > \n<p>住在1楼，由于地面潮湿，会考虑全部铺瓷砖，而不是用地板。但大块的瓷砖不仅贴起来麻烦，而且人工费也贵。所以可以选择小一点的瓷砖，800X800和600X600，这两款泥工贴砖费相对较低。而且有特色的装饰局部点缀可以，大规模使用绝对是降低性价比、增加造价的大坑。想省钱，那么选择主材的方向可以考虑平庸、大品牌、特价。平庸指的是产品型号，可能已经过气了，但是没特色也不难看，这种型号基本是烂大街的款，竞争力低下，购入成本可以压的很低。大品牌，有质量和安全性的要求，用的放心，售后有保障。</p > \n<p><strong>法则二</strong></p > \n<p><strong>隐形的材料值得花费</strong></p > \n<p>< img src=\"http://s1.life.itc.cn/img/201702/34877c40f0b7724aa315dedd7ab5ad9f\" style=\"max-width:720px;\"/></p > \n<p>花钱要花在看不到的东西上，可能很多朋友无法理解这点。比如选择马桶，核心不在于看它的款式和釉面，而是看它的抽水配件，好的抽水配件不仅静音效果很好，而且使用寿命也长。况且马桶出故障八成是在抽水件上出问题，所以选择好的很重要。浴室柜不要选择太廉价的，生锈、台盆掉落、下水器堵塞、管道漏水等都是廉价浴室柜的后果。所以请不要在浴室柜上省钱，现在出的血，不出5年你的浴室柜一定会反馈你。而且优质的台面和柜体材料会给卫生间颜值加分，这个加分比瓷砖更容易些。五金，必须强调再强调，这个地方不要省钱，也不能省钱啊，五金配件清单可能会把很多人吓到，密密麻麻的列表，但花洒、龙头一定要质量过关，你可以不选进口的，但是国产一线牌子还是需要的，因为换一个水龙头的成本代价远高过其本身，所以能一次到位还是尽可能一次到位。</p > \n<p><strong>法则三</strong></p > \n<p><strong>软装的舍取</strong></p > \n<p>< img src=\"http://s1.life.itc.cn/img/201702/e1b4c1d087f769a5528d67658029f529\" style=\"max-width:720px;\"/></p > \n<p>软装暂且用固定和活动来进行分类，灯具和窗帘把它们划进固定类别，装饰品诸如地毯、挂画、瓶瓶罐罐碟碟等全部算活动。固定的软装在兼顾颜值的情况下，也要考虑质量，毕竟想换不是那么容易。比如买吊扇灯就要选择只做吊扇灯的品牌商家。灯具是全屋最出彩的软装，这块要坚定喜好，绝对不因为价格妥协款式。到时候因为一时贪便宜想换，不仅麻烦还费钱。</p > \n<p><strong>法则四</strong></p > \n<p><strong>家具的选择</strong></p > \n<p>< img src=\"http://s1.life.itc.cn/img/201702/ea88578c3d2df3e40e703ef948b2a402\" style=\"max-width:720px;\"/></p > \n<p>固定家具，不论是木工还是外面厂商定制，其实不论标榜什么环保级别，最终就是密度板、夹板、实木。有人可能会问大芯板和免漆板了，解释下大芯板也是夹板的一种，不过是两片夹胶中间木，夹板也分层级，从3层到11层都有，从环保上讲2片夹胶板(大芯板)的胶水用量少，相对会环保些，当然是在用同样甲醛指标的胶水下。免漆板纯属偷换概念的喊法，它仅仅只说明漆面，不能说明它自身里面是什么材质。密度板又称纤维板，是木质和植物纤维用胶水粘制而成的，容易造型，多用于门板，它的胶水含量是最高的，在使用同样级别胶水情况下密度板肯定不如夹板环保。也就是，当用着所谓大牌的密度板家具时，别去嘲笑宜家的纤维板，五十步笑百步，没准人家宜家的还更环保，国家对进口品牌产品检测还是比较严格的。</p > \n<p><strong>法则五</strong></p > \n<p><strong>电器</strong></p > \n<p>< img src=\"http://s1.life.itc.cn/img/201702/6b76be5fc5e17d2e58c02d9e941e8d5e\" style=\"max-width:720px;\"/></p > \n<p>主要讲厨房电器，一定由家里那个下厨房的来定，用不用的上，他（她）来决定，不为只是高大上自己却不擅长用的东西买单，比如没人做西餐甜点，花大价钱买个嵌入烤箱干什么？摆设吗？再比如洗碗机，家里谁洗碗谁来决定要不要买。</p > \n<p><strong>资源来源于网络分享只供学习交流</strong></p >"
-					}
-					]
-				},{
-					name: "第二部分",
-					chapers: [
-					{
-						name: "章节一",
-						content: "<p>在装修过程中，大多数朋友都会想的一个问题是，怎么用最少的钱装出最好的效果。但好品味一般是靠钱砸出来的，小编也找不到好的方法，所以小编只能教你们如何合理控制预算，省一些没必要花的钱。</p > \n<p><strong>法则一</strong></p > \n<p><strong>严格控制大面积的主材</strong></p > \n<p>< img src=\"http://s1.life.itc.cn/img/201702/f51f63a9a769f8f4c263a583e2dc6a38\" style=\"max-width:720px;\"/></p > \n<p>住在1楼，由于地面潮湿，会考虑全部铺瓷砖，而不是用地板。但大块的瓷砖不仅贴起来麻烦，而且人工费也贵。所以可以选择小一点的瓷砖，800X800和600X600，这两款泥工贴砖费相对较低。而且有特色的装饰局部点缀可以，大规模使用绝对是降低性价比、增加造价的大坑。想省钱，那么选择主材的方向可以考虑平庸、大品牌、特价。平庸指的是产品型号，可能已经过气了，但是没特色也不难看，这种型号基本是烂大街的款，竞争力低下，购入成本可以压的很低。大品牌，有质量和安全性的要求，用的放心，售后有保障。</p > \n<p><strong>法则二</strong></p > \n<p><strong>隐形的材料值得花费</strong></p > \n<p>< img src=\"http://s1.life.itc.cn/img/201702/34877c40f0b7724aa315dedd7ab5ad9f\" style=\"max-width:720px;\"/></p > \n<p>花钱要花在看不到的东西上，可能很多朋友无法理解这点。比如选择马桶，核心不在于看它的款式和釉面，而是看它的抽水配件，好的抽水配件不仅静音效果很好，而且使用寿命也长。况且马桶出故障八成是在抽水件上出问题，所以选择好的很重要。浴室柜不要选择太廉价的，生锈、台盆掉落、下水器堵塞、管道漏水等都是廉价浴室柜的后果。所以请不要在浴室柜上省钱，现在出的血，不出5年你的浴室柜一定会反馈你。而且优质的台面和柜体材料会给卫生间颜值加分，这个加分比瓷砖更容易些。五金，必须强调再强调，这个地方不要省钱，也不能省钱啊，五金配件清单可能会把很多人吓到，密密麻麻的列表，但花洒、龙头一定要质量过关，你可以不选进口的，但是国产一线牌子还是需要的，因为换一个水龙头的成本代价远高过其本身，所以能一次到位还是尽可能一次到位。</p > \n<p><strong>法则三</strong></p > \n<p><strong>软装的舍取</strong></p > \n<p>< img src=\"http://s1.life.itc.cn/img/201702/e1b4c1d087f769a5528d67658029f529\" style=\"max-width:720px;\"/></p > \n<p>软装暂且用固定和活动来进行分类，灯具和窗帘把它们划进固定类别，装饰品诸如地毯、挂画、瓶瓶罐罐碟碟等全部算活动。固定的软装在兼顾颜值的情况下，也要考虑质量，毕竟想换不是那么容易。比如买吊扇灯就要选择只做吊扇灯的品牌商家。灯具是全屋最出彩的软装，这块要坚定喜好，绝对不因为价格妥协款式。到时候因为一时贪便宜想换，不仅麻烦还费钱。</p > \n<p><strong>法则四</strong></p > \n<p><strong>家具的选择</strong></p > \n<p>< img src=\"http://s1.life.itc.cn/img/201702/ea88578c3d2df3e40e703ef948b2a402\" style=\"max-width:720px;\"/></p > \n<p>固定家具，不论是木工还是外面厂商定制，其实不论标榜什么环保级别，最终就是密度板、夹板、实木。有人可能会问大芯板和免漆板了，解释下大芯板也是夹板的一种，不过是两片夹胶中间木，夹板也分层级，从3层到11层都有，从环保上讲2片夹胶板(大芯板)的胶水用量少，相对会环保些，当然是在用同样甲醛指标的胶水下。免漆板纯属偷换概念的喊法，它仅仅只说明漆面，不能说明它自身里面是什么材质。密度板又称纤维板，是木质和植物纤维用胶水粘制而成的，容易造型，多用于门板，它的胶水含量是最高的，在使用同样级别胶水情况下密度板肯定不如夹板环保。也就是，当用着所谓大牌的密度板家具时，别去嘲笑宜家的纤维板，五十步笑百步，没准人家宜家的还更环保，国家对进口品牌产品检测还是比较严格的。</p > \n<p><strong>法则五</strong></p > \n<p><strong>电器</strong></p > \n<p>< img src=\"http://s1.life.itc.cn/img/201702/6b76be5fc5e17d2e58c02d9e941e8d5e\" style=\"max-width:720px;\"/></p > \n<p>主要讲厨房电器，一定由家里那个下厨房的来定，用不用的上，他（她）来决定，不为只是高大上自己却不擅长用的东西买单，比如没人做西餐甜点，花大价钱买个嵌入烤箱干什么？摆设吗？再比如洗碗机，家里谁洗碗谁来决定要不要买。</p > \n<p><strong>资源来源于网络分享只供学习交流</strong></p >"
-					},
-					{
-						name: "章节二",
-						content: "<p>在装修过程中，大多数朋友都会想的一个问题是，怎么用最少的钱装出最好的效果。但好品味一般是靠钱砸出来的，小编也找不到好的方法，所以小编只能教你们如何合理控制预算，省一些没必要花的钱。</p > \n<p><strong>法则一</strong></p > \n<p><strong>严格控制大面积的主材</strong></p > \n<p>< img src=\"http://s1.life.itc.cn/img/201702/f51f63a9a769f8f4c263a583e2dc6a38\" style=\"max-width:720px;\"/></p > \n<p>住在1楼，由于地面潮湿，会考虑全部铺瓷砖，而不是用地板。但大块的瓷砖不仅贴起来麻烦，而且人工费也贵。所以可以选择小一点的瓷砖，800X800和600X600，这两款泥工贴砖费相对较低。而且有特色的装饰局部点缀可以，大规模使用绝对是降低性价比、增加造价的大坑。想省钱，那么选择主材的方向可以考虑平庸、大品牌、特价。平庸指的是产品型号，可能已经过气了，但是没特色也不难看，这种型号基本是烂大街的款，竞争力低下，购入成本可以压的很低。大品牌，有质量和安全性的要求，用的放心，售后有保障。</p > \n<p><strong>法则二</strong></p > \n<p><strong>隐形的材料值得花费</strong></p > \n<p>< img src=\"http://s1.life.itc.cn/img/201702/34877c40f0b7724aa315dedd7ab5ad9f\" style=\"max-width:720px;\"/></p > \n<p>花钱要花在看不到的东西上，可能很多朋友无法理解这点。比如选择马桶，核心不在于看它的款式和釉面，而是看它的抽水配件，好的抽水配件不仅静音效果很好，而且使用寿命也长。况且马桶出故障八成是在抽水件上出问题，所以选择好的很重要。浴室柜不要选择太廉价的，生锈、台盆掉落、下水器堵塞、管道漏水等都是廉价浴室柜的后果。所以请不要在浴室柜上省钱，现在出的血，不出5年你的浴室柜一定会反馈你。而且优质的台面和柜体材料会给卫生间颜值加分，这个加分比瓷砖更容易些。五金，必须强调再强调，这个地方不要省钱，也不能省钱啊，五金配件清单可能会把很多人吓到，密密麻麻的列表，但花洒、龙头一定要质量过关，你可以不选进口的，但是国产一线牌子还是需要的，因为换一个水龙头的成本代价远高过其本身，所以能一次到位还是尽可能一次到位。</p > \n<p><strong>法则三</strong></p > \n<p><strong>软装的舍取</strong></p > \n<p>< img src=\"http://s1.life.itc.cn/img/201702/e1b4c1d087f769a5528d67658029f529\" style=\"max-width:720px;\"/></p > \n<p>软装暂且用固定和活动来进行分类，灯具和窗帘把它们划进固定类别，装饰品诸如地毯、挂画、瓶瓶罐罐碟碟等全部算活动。固定的软装在兼顾颜值的情况下，也要考虑质量，毕竟想换不是那么容易。比如买吊扇灯就要选择只做吊扇灯的品牌商家。灯具是全屋最出彩的软装，这块要坚定喜好，绝对不因为价格妥协款式。到时候因为一时贪便宜想换，不仅麻烦还费钱。</p > \n<p><strong>法则四</strong></p > \n<p><strong>家具的选择</strong></p > \n<p>< img src=\"http://s1.life.itc.cn/img/201702/ea88578c3d2df3e40e703ef948b2a402\" style=\"max-width:720px;\"/></p > \n<p>固定家具，不论是木工还是外面厂商定制，其实不论标榜什么环保级别，最终就是密度板、夹板、实木。有人可能会问大芯板和免漆板了，解释下大芯板也是夹板的一种，不过是两片夹胶中间木，夹板也分层级，从3层到11层都有，从环保上讲2片夹胶板(大芯板)的胶水用量少，相对会环保些，当然是在用同样甲醛指标的胶水下。免漆板纯属偷换概念的喊法，它仅仅只说明漆面，不能说明它自身里面是什么材质。密度板又称纤维板，是木质和植物纤维用胶水粘制而成的，容易造型，多用于门板，它的胶水含量是最高的，在使用同样级别胶水情况下密度板肯定不如夹板环保。也就是，当用着所谓大牌的密度板家具时，别去嘲笑宜家的纤维板，五十步笑百步，没准人家宜家的还更环保，国家对进口品牌产品检测还是比较严格的。</p > \n<p><strong>法则五</strong></p > \n<p><strong>电器</strong></p > \n<p>< img src=\"http://s1.life.itc.cn/img/201702/6b76be5fc5e17d2e58c02d9e941e8d5e\" style=\"max-width:720px;\"/></p > \n<p>主要讲厨房电器，一定由家里那个下厨房的来定，用不用的上，他（她）来决定，不为只是高大上自己却不擅长用的东西买单，比如没人做西餐甜点，花大价钱买个嵌入烤箱干什么？摆设吗？再比如洗碗机，家里谁洗碗谁来决定要不要买。</p > \n<p><strong>资源来源于网络分享只供学习交流</strong></p >"
-					}]
-				}]
+				sections: [],
+				bookName: "",
+				coverImg: ""
 			}
 		},
 		methods: {
@@ -208,26 +182,73 @@
 			},
 			goto(a){
 				// this.showHide(1)
-				location.href = `/#/${a}`
+				window.removeEventListener('scroll',this.showBtnMore)
+				location.href = `/#/${a}?bookId=${this.bookId}`
 				// this.$routes = `/#/${a}`
 			},
-			newChaper(sectionName,chaperName){
+			newChapter(sectionName,chaperName,sectionId,chapterId){
 				var $title = sectionName + "  " + chaperName
 				document.title = $title
-				location.htef = `/#/?${chaperName}`
+				location.href = `/#/?chapterId=${chapterId}`
+				location.reload()
 			},
 			upDown(){
 				if(this.stutes%2 == 0){
-					document.getElementById("btns").style.bottom = 0 + "px"
+					document.getElementById("btns").style.bottom = -1 + "px"
 				}
 				else if(this.stutes%2 == 1){
 					document.getElementById("btns").style.bottom = -44 + "px"
 				}
 				this.stutes++
+			},
+			getBookCont() {
+				axios.get(`${this.baseUrl}book-infos`).then((res) => {
+					this.bookName = res.data.data
+				}).catch((err) => {
+					console.log(err)
+				})
+			},
+			getChapterCont(){
+				let bookSections = []
+				let that = this
+				axios.get(`${this.baseUrl}chapter-infos`).then((res) => {
+					// console.log(res.data.data)
+					that.sections = []
+					let section = {}
+					bookSections = res.data.data.filter(function(a){
+						return a.bookInfo.id == that.bookId
+					})
+					bookSections.map(function(a){
+						if(a.level === 0){
+							section = {}
+							section.name = a.name
+							section.sort = a.sort
+							section.sectionId = a.id
+							section.chapters = []
+							that.sections.push(section)
+						}
+						else{
+							section = {}
+							section.name = a.name
+							section.chapterId = a.id
+							that.sections.map(function(b){
+								if(b.sort == a.sort){
+									b.chapters.push(section)
+								}
+							})
+						}
+					})
+					console.log(bookSections)
+					that.bookName = bookSections[0].bookInfo.name
+					that.coverImg = 'http://ohej1hvbm.bkt.clouddn.com/' + bookSections[0].bookInfo.coverImg
+				}).catch((err) => {
+					console.log(err)
+				})
 			}
 		},
 		mounted() {
-			// window.onscroll = this.showBtnMore()
+			this.getChapterCont()
+			this.getBookCont()
 		}
 	}
 </script>
