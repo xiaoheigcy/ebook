@@ -201,13 +201,13 @@
 				}
 				this.stutes++
 			},
-			getBookCont() {
-				axios.get(`${this.baseUrl}book-infos`).then((res) => {
-					this.bookName = res.data.data
-				}).catch((err) => {
-					console.log(err)
-				})
-			},
+			// getBookCont() {
+			// 	axios.get(`${this.baseUrl}book-infos`).then((res) => {
+			// 		this.bookName = res.data.data
+			// 	}).catch((err) => {
+			// 		console.log(err)
+			// 	})
+			// },
 			getChapterCont(){
 				let bookSections = []
 				let that = this
@@ -238,7 +238,6 @@
 							})
 						}
 					})
-					console.log(bookSections)
 					that.bookName = bookSections[0].bookInfo.name
 					that.coverImg = 'http://ohej1hvbm.bkt.clouddn.com/' + bookSections[0].bookInfo.coverImg
 				}).catch((err) => {
@@ -248,7 +247,7 @@
 		},
 		mounted() {
 			this.getChapterCont()
-			this.getBookCont()
+			// this.getBookCont()
 		}
 	}
 </script>
