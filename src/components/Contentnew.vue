@@ -15,15 +15,16 @@
 <template>
 	<div class="contentnew">
 		<!-- <div v-html="sections[0].chapers[0].content"></div> -->
-		<!-- <vue-markdown sections[0].chapers[0].content></vue-markdown> -->
+		<vue-markdown :source="sections[0].chapers[0].content"></vue-markdown>
 		<sidebar></sidebar>
 	</div>
 </template>
 
 <script type="text/javascript">
 	import axios from 'axios'
-	import vueMarkdown from 'vueMarkdown'
+	import vueMarkdown from 'vue-markdown'
 	import Sidebar from './Sidebar'
+
 	export default {
 		name: 'contentnew',
 		components: {
